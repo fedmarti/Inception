@@ -1,0 +1,30 @@
+name: inception
+
+
+services:
+  nginx:
+    env_file: ".env"
+    container_name: nginx
+    build: 
+      context:
+        requirements/nginx/.
+      args:
+        DOMAIN_NAME: ${DOMAIN_NAME}
+        CERT: ${CERT}
+        CERT_KEY: ${CERT_KEY}
+        CERT_REQUEST: ${CERT_REQUEST}
+      dockerfile: Dockerfile
+    ports:
+      - "443:443"
+    volumes:
+      - ./data/wordpress:/var/www/html
+  wordpress:
+    build: requirements/wordpress/.
+    container_name: wp-php
+    volumes:
+      - ./web:/var/www/html
+  # mariadb:
+    # build: requirements/mariadb/.
+    # container_name: mariadb
+    # volumes:
+      # - $(MYSQL_VOL):/var/lib/mysql'
